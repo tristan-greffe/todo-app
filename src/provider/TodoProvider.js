@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { TodoContext } from './TodoContext'
+import { TodoContext } from '../store/TodoContext'
 
 export const TodoProvider = ({ children }) => {
   const initialState = { todos : [], edit: { id: null, value: '' } }
