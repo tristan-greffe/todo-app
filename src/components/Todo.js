@@ -1,32 +1,28 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { RiCloseCircleLine } from 'react-icons/ri'
 import { TiEdit } from 'react-icons/ti'
 import TodoForm from './TodoForm'
+import { TodoContext } from '../store/TodoContext'
 
-function Todo({ todos, completeTodo, removeTodo, updateTodo }) {
-  const [edit, setEdit] = useState({ id: null, value: '' })
+function Todo() {
+  const  [state, dispatch] = useContext(TodoContext)
 
-  const submitUpdate = value => {
-    updateTodo(edit.id, value)
-    setEdit({ id: null, value: '' })
+  if (state.edit.id) {
+    return <TodoForm edit={state.edit} />
   }
 
-  if(edit.id) {
-    return <TodoForm edit={edit} onSubmit={submitUpdate} />
-  }
-
-  return todos.map((todo, index) => (
+  return state.todos.map((todo, index) => (
     <div className={todo.isComplete ? 'todo-row complete' : 'todo-row'} key={index}>
-      <div key={todo.id} onClick={() => completeTodo(todo.id)}>
+      <div key={todo.id} onClick={() => dispatch({ type : 'COMPLETE_TODO', payload: todo.id })}>
         {todo.text}
       </div>
       <div className='icons'>
         <RiCloseCircleLine
-          onClick={() => removeTodo(todo.id)}
+          onClick={() => dispatch({ type : 'REMOVE_TODO', payload: todo.id })}
           className='delete-icon'
         />
         <TiEdit
-          onClick={() => setEdit({ id: todo.id, value: todo.text })}
+          onClick={() => dispatch({ type : 'UPDATE_EDIT', payload: { id: todo.id, value: todo.text } })}
           className='edit-icon'
         />
       </div>
